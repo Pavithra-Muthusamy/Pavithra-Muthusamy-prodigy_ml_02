@@ -1,0 +1,36 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Sample customer purchase history dataset
+data = {
+    'CustomerID': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'AmountSpent': [100, 200, 50, 300, 150, 50, 250, 200, 150, 300],
+    'Frequency': [5, 7, 3, 8, 6, 2, 7, 6, 5, 9],
+    'Recency': [10, 5, 15, 3, 8, 20, 6, 7, 9, 2]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Scale the features
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(df[['AmountSpent', 'Frequency', 'Recency']])
+
+# Apply K-means clustering
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(scaled_features)
+df['Cluster'] = kmeans.labels_
+
+# Visualize the clusters
+plt.figure(figsize=(10, 6))
+plt.scatter(df['AmountSpent'], df['Frequency'], c=df['Cluster'], cmap='viridis')
+plt.xlabel('Amount Spent')
+plt.ylabel('Frequency')
+plt.title('Customer Segmentation based on Purchase History')
+plt.colorbar(label='Cluster')
+plt.show()
+
+print(df)
